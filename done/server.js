@@ -6,11 +6,11 @@ var mysql = require('mysql2');
 var connection, msg;
 
 var app = express();
-var server = app.listen(3000);
+var server = app.listen(8080);
 app.use(express.static('client'));
 var socket = require('socket.io');
 var io = socket(server);
-console.log("Socket server kører på port 3000");
+console.log("Socket server kører på port 8080");
 
 io.sockets.on('connection', function (socket) {
 	console.log('connection: ' + socket.id);
@@ -22,14 +22,15 @@ io.sockets.on('connection', function (socket) {
 		database: 'moe'
 	});
 
-	socket.on("username", function (val, callback) {
-		connection.query("SELECT * FROM Users WHERE username=?", connection.escape(val), function (err, rows, fields) {
+	socket.on("save", function (post, callback) {
+		connection.query("SELECT * FROM Users WHERE username = ?", post.username, function (err, rows, fields) {
 			if (err) throw err
 			//Ingen med dette brugernavn
 			if(rows.length == 0){
-				connection.query("INSERT INTO Users (username) VALUES (?)", connection.escape(val), function (err, rows, fields) {
+				var query = connection.query("INSERT INTO Users SET ?", post, function (err, rows, fields) {
 					if(err) throw err
-					callback("Velkommen til " + val + ". Dit brugernavn er nu gemt i databasen", true); 
+					console.log(query.sql)
+					callback("Velkommen til " + post.username + ". Dit brugernavn er nu gemt i databasen", true); 
 				});
 			}else{
 				callback("Det brugernavn er desværre taget - prøv igen", false);
