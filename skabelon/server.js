@@ -61,10 +61,10 @@ var post = {
 
 På serveren skal i bruge et SQL INSERT statement, når i modtager besked fra klienten, fx: 
 
-			if(rows.length == 0){
-				var query = connection.query("INSERT INTO Users SET ?", post, function (err, rows, fields) { ... }
+connection.query("INSERT INTO Users SET ?", post, function (err, rows, fields) { ... }
 
-Prøv at tilrette programmet, så serveren ført tjekker om brugernavnet er taget - hvis det er ledigt får klienten besked om at det er gået godt, hvis det IKKE er ledigt, får den besked om at prøve igen 
+Prøv at tilrette programmet, så serveren ført tjekker om brugernavnet er taget - hvis det er ledigt får klienten besked om at det er gået godt, 
+hvis det IKKE er ledigt, får den besked om at prøve igen (brug rows.length)
 
 Lad os udvide formen på klienten, så den også beder om et password.
 Indtil videre ser vi bort fra at kryptere - vi skal bare have gemt og valideret et password i databasen
